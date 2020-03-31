@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 echo -e "Building the package to './dist/'...\n"
 
