@@ -19,6 +19,9 @@ class PAYLOADS(enum.Enum):
 
 class FUNCTIONS(enum.Enum):
     discover = 0
+
+    set = 2
+
     get_settings = 1
     get_settings_range = 3
     get_operating_data = 4
@@ -28,7 +31,6 @@ class FUNCTIONS(enum.Enum):
     get_event_log = 8
     get_info = 9
     get_sw_versions = 10
-    set = 2
 
 
 START_CHAR = chr(0x02)

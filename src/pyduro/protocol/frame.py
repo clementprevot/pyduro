@@ -33,7 +33,7 @@ class Frame:
         pin_code (str): The secret pincode of the burner (this can often be found on a sticker somewhere on the burner).
             Note that this should be a 10 characters string. Any longer string will be truncated and any shorter string
             will be right padded with 0s.
-        function (int): The code of the function to run (0: discover, 1: get settings, ...).
+        function_id (int): The code of the function to run (0: discover, 1: get settings, ...).
             Note that this should be a number between 0 and 11.
             Also note that it will always be sent as a two character string ("00", "01", ..., "11").
         payload (str): The payload of the function.
@@ -50,10 +50,11 @@ class Frame:
             Note that this will be a number modulo 99.
             Also note that it will always be sent as a two character string ("00", "01", ..., "99").
             Default: 0
+        function_check (bool): Whether or not to check that the function is allowed or not.
 
     Attributes:
         app_id (str)
-        function (int)
+        function_id (int)
         payload (str)
         payload_size (int): The size of the payload.
         pin_code (str)
@@ -69,22 +70,24 @@ class Frame:
         self,
         serial,
         pin_code,
-        function,
+        function_id,
         payload,
         app_id=DEFAULT_APP_ID,
         sequence_number=0,
+        function_check=True,
     ):
         self.app_id = "{:_<12.12}".format(app_id)
         self.serial = "{:0>6.6}".format(serial)
         self.pin_code = "{:0<10.10}".format(pin_code)
-        self.function = function
+        self.function_id = function_id
         self.sequence_number = sequence_number % 99
         self.payload = payload if payload is not None else "*"
         self.payload_size = len(self.payload) if self.payload is not None else 0
 
-        allowed_functions = set(function.value for function in FUNCTIONS)
-        if self.function not in allowed_functions:
-            raise FunctionNotFoundException(self.function)
+        if function_check:
+            allowed_functions = set(function.value for function in FUNCTIONS)
+            if self.function_id not in allowed_functions:
+                raise FunctionNotFoundException(self.function_id)
 
         if self.payload_size > MAX_PAYLOAD_SIZE:
             raise PayloadToLargeException(self.payload)
@@ -97,14 +100,22 @@ class Frame:
             frame (str): The encoded NBE frame.
         """
 
-        function = "{:02d}".format(self.function)
+        function_id = "{:02d}".format(self.function_id)
         sequence_number = "{:02d}".format(self.sequence_number)
         timestamp = "{:0>10.10}".format(str(time()))
         payload_size = "{:03d}".format(self.payload_size)
 
-        frame = (
-            f"{self.app_id}{self.serial} {START_CHAR}{function}{sequence_number}{self.pin_code}{timestamp}pad "
-            f"{payload_size}{self.payload}{END_CHAR}"
+        frame = "{}{} {}{}{}{}{}pad {}{}{}".format(
+            self.app_id,
+            self.serial,
+            START_CHAR,
+            function_id,
+            sequence_number,
+            self.pin_code,
+            timestamp,
+            payload_size,
+            self.payload,
+            END_CHAR,
         )
 
         return frame
@@ -144,10 +155,12 @@ class Frame:
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.settimeout(timeout)
 
-        if verbose:
-            print(self.get().encode())
+        frame = self.get().encode()
 
-        sock.sendto(self.get().encode(), (destination_address, destination_port))
+        if verbose:
+            print(frame)
+
+        sock.sendto(frame, (destination_address, destination_port))
 
         try:
             response_frame, origin = sock.recvfrom(4096)

@@ -65,15 +65,13 @@ And here the different part of the frame:
 A response will always be formed in pretty much the same way:
 
 ```
-abcdefghijkl123456 \x0200000065Serial=123456;IP=192.168.1.250;Type=v13std;Ver=705;Build=38;Lang=0\x04
+abcdefghijkl123456\x0200000065Serial=123456;IP=192.168.1.250;Type=v13std;Ver=705;Build=38;Lang=0\x04
 ```
 
 * **abcdefghijkl** - `appId`, 12 alphanumerical (upper and lowercase) characters -
   Uniquely identify the application that the oven  is talking to
 * **123456** - `controllerId`, 6 digits - This is the "Serial number" of the
   oven responding
-* **space** or **\*** or **-** - Encryption level of the frame _(' ' = not
-  encrypted, '*' = RSA encrypted, '-' = XTEA encrypted)_
 * **\x02** - `startChar`, the ASCII character `0x02` _(so 1 char, not "\x02")_ -
   This is the separator to identify the beginning of the response
 * **00** - `function`, 2 digits - Identify the type of response _(see below)_
@@ -106,7 +104,8 @@ There is a limited set of functions you can use in the NBE protocol:
 * **9**: Read info
 * **10**: Read available programs
 
-> Note that your burner might not support all of them.
+> Note that your burner might not support all of them and might also support
+> others (for example, `11` is a supported type on Aduro H1 burners).
 
 ### More info
 
@@ -131,7 +130,7 @@ pip install pyduro
 Simply import the actions and use them:
 
 ```python
-from pyduro.actions import discover, get, set
+from pyduro.actions import discover, get, set, raw
 
 discover.run()
 get.run(
@@ -148,6 +147,13 @@ set.run(
   function_name="<settings|range|operating|advanced|consumption|chart|logs|info|versions>",
   path="<path>"
   value="<value>"
+)
+raw.run(
+  burner_address="<burner IP address>",
+  serial="<burner serial number>",
+  pin_code="<burner pin code>",
+  function_id="<function ID>",
+  payload="<payload>"
 )
 ```
 
@@ -223,6 +229,10 @@ error).
 > * "misc"
 > * "alarm"
 > * "manual"
+>
+> To see all sub element of a path, add `.*` at the end of the path.  
+> To see a specific element of a path, add `.<element name>` at the end of the
+> path.
 
 > For `consumption` action, you can pass one of the following path:
 >
