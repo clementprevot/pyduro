@@ -13,7 +13,9 @@ from protocol.frame import Frame
 # -----------------------------------------------------------------------------------------------------------------------
 
 
-def run(burner_address, serial, pin_code, function_name, path="*", value=None):
+def run(
+    burner_address, serial, pin_code, function_name, path="*", value=None, verbose=False
+):
     """
     Get information from the given burner.
 
@@ -28,6 +30,8 @@ def run(burner_address, serial, pin_code, function_name, path="*", value=None):
         function (int): The part of the burner information you want to get.
         path (str): The path of the payload to modify on the burner.
         value (str): Not used here.
+        verbose (bool): Indicates if we want the frame to be printed before sending it.
+            Default: False
     """
 
     root = (
@@ -114,7 +118,7 @@ def run(burner_address, serial, pin_code, function_name, path="*", value=None):
 
         frame = Frame(serial, pin_code, function, path)
 
-        response = frame.send(burner_address)
+        response = frame.send(burner_address, verbose=verbose)
 
         return response
     except FunctionNotFoundException as e:

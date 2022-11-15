@@ -8,6 +8,10 @@ import enum
 
 DEFAULT_APP_ID = "___pyduro___"
 
+DEFAULT_NBE_PORT = 8483
+DEFAULT_ORIGIN_PORT = 1901
+DEFAULT_LOCAL_ADDRESS = "0.0.0.0"
+
 
 class PAYLOADS(enum.Enum):
     discovery = "NBE Discovery"

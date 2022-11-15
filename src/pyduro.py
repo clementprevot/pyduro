@@ -36,6 +36,12 @@ def main():
         type=str,
     )
     parser.add_argument(
+        "-v",
+        "--verbose",
+        help="Display the raw frames sent and received",
+        action="store_true",
+    )
+    parser.add_argument(
         "action",
         help='Run the given action (Default = "discover")',
         type=str,
@@ -67,7 +73,9 @@ def main():
 
     response = None
     if args.action == "discover":
-        response = importlib.import_module(f"actions.{args.action}").run()
+        response = importlib.import_module(f"actions.{args.action}").run(
+            verbose=args.verbose
+        )
     else:
         response = importlib.import_module(f"actions.{args.action}").run(
             burner_address=args.burner,
@@ -76,13 +84,13 @@ def main():
             function_name=args.function,
             path=args.path,
             value=args.value,
+            verbose=args.verbose,
         )
 
     if response:
         if args.action == "get":
             print(json.dumps(response.parse_payload(), sort_keys=True, indent=2))
         else:
-            print(response.frame)
             print(response.parse_payload())
 
         exit(response.status)

@@ -5,9 +5,11 @@
 import socket
 from time import time
 
-from constants import DEFAULT_LOCAL_ADDRESS, DEFAULT_NBE_PORT, DEFAULT_ORIGIN_PORT
 from protocol import (
     DEFAULT_APP_ID,
+    DEFAULT_LOCAL_ADDRESS,
+    DEFAULT_NBE_PORT,
+    DEFAULT_ORIGIN_PORT,
     END_CHAR,
     FUNCTIONS,
     MAX_PAYLOAD_SIZE,
@@ -114,6 +116,7 @@ class Frame:
         source_address=DEFAULT_LOCAL_ADDRESS,
         source_port=DEFAULT_ORIGIN_PORT,
         timeout=5,
+        verbose=False,
     ):
         """
         Sends the frame to the burner over an UDP socket and wait for the response.
@@ -129,6 +132,8 @@ class Frame:
             timeout (int): The maximum duration to wait for a response from a burner, in seconds.
                 If `None` is given, then the call will be blocking.
                 Default: 5
+            verbose (bool): Indicates if we want to display the frame before sending it.
+                Default: False
 
         Returns:
             response (Response): The response from the burner (if any)
@@ -139,10 +144,16 @@ class Frame:
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.settimeout(timeout)
 
+        if verbose:
+            print(self.get().encode())
+
         sock.sendto(self.get().encode(), (destination_address, destination_port))
 
         try:
             response_frame, origin = sock.recvfrom(4096)
+
+            if verbose:
+                print(response_frame)
 
             return Response(response_frame.decode(), origin)
         except socket.timeout:
