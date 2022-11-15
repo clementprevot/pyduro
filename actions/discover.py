@@ -26,8 +26,8 @@ def run():
         )
 
         response = frame.send(DEFAULT_DISCOVERY_ADDRESS)
-        if response:
-            print(response.parse_payload())
+
+        return response
     except FunctionNotFoundException as e:
         print(e.message)
     except PayloadToLargeException as e:

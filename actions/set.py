@@ -63,8 +63,8 @@ def run(burner_address, serial, pin_code, function_name, path, value):
         frame = Frame(serial, pin_code, function, payload)
 
         response = frame.send(burner_address)
-        if response:
-            print(response.parse_payload())
+
+        return response
     except FunctionNotFoundException as e:
         print(e.message)
     except PayloadToLargeException as e:

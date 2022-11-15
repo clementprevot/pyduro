@@ -2,7 +2,6 @@
 
 # -----------------------------------------------------------------------------------------------------------------------
 import time
-import json
 from protocol import (
     FUNCTIONS,
     PAYLOADS,
@@ -116,8 +115,8 @@ def run(burner_address, serial, pin_code, function_name, path="*", value=None):
         frame = Frame(serial, pin_code, function, path)
 
         response = frame.send(burner_address)
-        if response:
-            print(json.dumps(response.parse_payload(), sort_keys=True, indent=2))
+
+        return response
     except FunctionNotFoundException as e:
         print(e.message)
     except PayloadToLargeException as e:

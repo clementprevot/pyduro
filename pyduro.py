@@ -5,6 +5,7 @@
 
 import argparse
 import importlib
+import json
 
 from actions import ACTIONS, FUNCTIONS
 
@@ -64,10 +65,11 @@ def main():
 
     args = parser.parse_args()
 
+    response = None
     if args.action == "discover":
-        importlib.import_module(f"actions.{args.action}").run()
+        response = importlib.import_module(f"actions.{args.action}").run()
     else:
-        importlib.import_module(f"actions.{args.action}").run(
+        response = importlib.import_module(f"actions.{args.action}").run(
             burner_address=args.burner,
             serial=args.serial,
             pin_code=args.pin,
@@ -75,6 +77,17 @@ def main():
             path=args.path,
             value=args.value,
         )
+
+    if response:
+        if args.action == "get":
+            print(json.dumps(response.parse_payload(), sort_keys=True, indent=2))
+        else:
+            print(response.frame)
+            print(response.parse_payload())
+
+        exit(response.status)
+
+    exit(1)
 
 
 # -----------------------------------------------------------------------------------------------------------------------
