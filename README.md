@@ -1,3 +1,20 @@
+[![GitHub Latest Release][releases_shield]][latest_release]
+[![GitHub All Releases][downloads_total_shield]][releases]
+[![Buy me a coffee][buy_me_a_coffee_shield]][buy_me_a_coffee]
+[![PayPal.Me][paypal_me_shield]][paypal_me]
+
+[latest_release]: https://github.com/clementprevot/pyduro/releases/latest
+[releases_shield]: https://img.shields.io/github/release/clementprevot/pyduro.svg?style=popout
+
+[releases]: https://github.com/clementprevot/pyduro/releases
+[downloads_total_shield]: https://img.shields.io/github/downloads/clementprevot/pyduro/total
+
+[buy_me_a_coffee_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
+[buy_me_a_coffee]: https://www.buymeacoffee.com/clementprevot
+
+[paypal_me_shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
+[paypal_me]: https://paypal.me/clementprevot
+
 # PyDuro
 
 A Pypi library to communicate with Aduro (H1) wood/pellet burner via NBE
