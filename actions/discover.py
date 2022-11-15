@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
-#-----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------
 
 from constants import DEFAULT_DISCOVERY_ADDRESS
-from protocol import FUNCTIONS, PAYLOADS, FunctionNotFoundException, PayloadToLargeException
+from protocol import (
+    FUNCTIONS,
+    PAYLOADS,
+    FunctionNotFoundException,
+    PayloadToLargeException,
+)
 from protocol.frame import Frame
 
-#-----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------
+
 
 def run():
     """
@@ -15,13 +21,13 @@ def run():
     """
 
     try:
-        frame = Frame('<serial>', '<pin>', FUNCTIONS.discover.value, PAYLOADS.discovery.value)
+        frame = Frame(
+            "<serial>", "<pin>", FUNCTIONS.discover.value, PAYLOADS.discovery.value
+        )
 
         response = frame.send(DEFAULT_DISCOVERY_ADDRESS)
-        if not response:
-            print('No burner answered to the discover answer in less than 5 seconds...')
-        else:
-            print(response.frame)
+        if response:
+            print(response.parse_payload())
     except FunctionNotFoundException as e:
         print(e.message)
     except PayloadToLargeException as e:

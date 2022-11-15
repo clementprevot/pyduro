@@ -1,17 +1,26 @@
 # -*- coding: utf-8 -*-
 
-#-----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------
 
 import socket
 from time import time
 
 from constants import DEFAULT_LOCAL_ADDRESS, DEFAULT_NBE_PORT, DEFAULT_ORIGIN_PORT
-from protocol import DEFAULT_APP_ID, END_CHAR, FUNCTIONS, MAX_PAYLOAD_SIZE, START_CHAR, FunctionNotFoundException, \
-    PayloadToLargeException, ResponseMalformedException
+from protocol import (
+    DEFAULT_APP_ID,
+    END_CHAR,
+    FUNCTIONS,
+    MAX_PAYLOAD_SIZE,
+    START_CHAR,
+    FunctionNotFoundException,
+    PayloadToLargeException,
+    ResponseMalformedException,
+)
 
-#-----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------
 
-class Frame():
+
+class Frame:
     """
     Defines a NBE communication to send request to the burner controller and receive a response.
 
@@ -26,7 +35,7 @@ class Frame():
             Note that this should be a number between 0 and 11.
             Also note that it will always be sent as a two character string ("00", "01", ..., "11").
         payload (str): The payload of the function.
-            Note that you cannot send a request without a payload. This is considered illegale in the NBE communication
+            Note that you cannot send a request without a payload. This is considered illegal in the NBE communication
             protocol.
             Also note that you cannot send a payload larger than 495 bytes.
         app_id (str): The application identifier you want to give to the burner. This has no real use for Aduro's
@@ -54,14 +63,22 @@ class Frame():
         PayloadToLargeException: If the given payload is larger than 495 bytes.
     """
 
-    def __init__(self, serial, pin_code, function, payload, app_id=DEFAULT_APP_ID, sequence_number=0):
-        self.app_id = '{:_<12.12}'.format(app_id)
-        self.serial = '{:0>6.6}'.format(serial)
-        self.pin_code = '{:0<10.10}'.format(pin_code)
+    def __init__(
+        self,
+        serial,
+        pin_code,
+        function,
+        payload,
+        app_id=DEFAULT_APP_ID,
+        sequence_number=0,
+    ):
+        self.app_id = "{:_<12.12}".format(app_id)
+        self.serial = "{:0>6.6}".format(serial)
+        self.pin_code = "{:0<10.10}".format(pin_code)
         self.function = function
         self.sequence_number = sequence_number % 99
-        self.payload = payload
-        self.payload_size = len(self.payload)
+        self.payload = payload if payload is not None else "*"
+        self.payload_size = len(self.payload) if self.payload is not None else 0
 
         allowed_functions = set(function.value for function in FUNCTIONS)
         if self.function not in allowed_functions:
@@ -78,18 +95,26 @@ class Frame():
             frame (str): The encoded NBE frame.
         """
 
-        function = '{:02d}'.format(self.function)
-        sequence_number = '{:02d}'.format(self.sequence_number)
-        timestamp = '{:0>10.10}'.format(str(time()))
-        payload_size = '{:03d}'.format(self.payload_size)
+        function = "{:02d}".format(self.function)
+        sequence_number = "{:02d}".format(self.sequence_number)
+        timestamp = "{:0>10.10}".format(str(time()))
+        payload_size = "{:03d}".format(self.payload_size)
 
-        frame = f'{self.app_id}{self.serial} {START_CHAR}{function}{sequence_number}{self.pin_code}{timestamp}pad '\
-        f'{payload_size}{self.payload}{END_CHAR}'
+        frame = (
+            f"{self.app_id}{self.serial} {START_CHAR}{function}{sequence_number}{self.pin_code}{timestamp}pad "
+            f"{payload_size}{self.payload}{END_CHAR}"
+        )
 
         return frame
 
-    def send(self, destination_address, destination_port=DEFAULT_NBE_PORT,
-        source_address=DEFAULT_LOCAL_ADDRESS, source_port=DEFAULT_ORIGIN_PORT, timeout=5):
+    def send(
+        self,
+        destination_address,
+        destination_port=DEFAULT_NBE_PORT,
+        source_address=DEFAULT_LOCAL_ADDRESS,
+        source_port=DEFAULT_ORIGIN_PORT,
+        timeout=5,
+    ):
         """
         Sends the frame to the burner over an UDP socket and wait for the response.
 
@@ -114,18 +139,24 @@ class Frame():
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.settimeout(timeout)
 
-        print(self.get().encode())
-        sock.sendto(self.get().encode(), ('192.168.1.247', destination_port))
+        sock.sendto(self.get().encode(), (destination_address, destination_port))
 
         try:
             response_frame, origin = sock.recvfrom(4096)
 
-            print(response_frame.decode())
             return Response(response_frame.decode(), origin)
+        except socket.timeout:
+            print("No response received from a burner in less than 5 seconds!")
         except:
-            return None
+            print(
+                "Unable to parse the answer from the burner ({}): {}".format(
+                    origin, response_frame
+                )
+            )
+            raise
 
-class Response():
+
+class Response:
     """
     Defines a NBE communication received from a burner.
 
@@ -173,7 +204,7 @@ class Response():
         end = start + 6
         self.serial = frame[start:end]
 
-        start = end + 2
+        start = end + 1
         end = start + 2
         self.function = int(frame[start:end])
 
@@ -182,24 +213,30 @@ class Response():
         self.sequence_number = int(frame[start:end])
 
         start = end
-        end = start + 10
-        self.pin_code = int(frame[start:end])
+        end = start + 1
+        self.status = int(frame[start:end])
 
         start = end
-        end = start + 10
-        self.timestamp = int(frame[start:end])
-
-        start = end
-        end = start + 4
-        self.extra = frame[start:end]
-
-        start = end
-        end = start + 4
+        end = start + 3
         self.payload_size = int(frame[start:end])
 
         start = end
-        end = start + payload_size
+        end = start + self.payload_size
         if end > len(frame):
             raise ResponseMalformedException(frame)
         else:
-            self.payload = int(frame[start:end])
+            self.payload = frame[start:end]
+
+    def parse_payload(self):
+        if ";" not in self.payload:
+            return self.payload
+
+        items = {} if "=" in self.payload else []
+        for item in self.payload.split(";"):
+            if "=" not in item:
+                items.append(item)
+            else:
+                name, value = item.split("=")
+                items[name] = value
+
+        return items
