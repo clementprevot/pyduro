@@ -36,5 +36,5 @@ setup(
     py_modules=[],
     python_requires=">=3.6",
     url="https://github.com/clementprevot/pyduro",
-    version="1.1.0",
+    version="2.0.0",
 )

@@ -40,4 +40,4 @@ done
 
 echo -e "Publishing the package to '${REPOSITORY}'...\n"
 
-python3 -m twine upload --repository $REPOSITORY dist/*
+python -m twine upload --repository $REPOSITORY dist/*
