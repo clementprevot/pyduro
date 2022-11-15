@@ -4,10 +4,9 @@
 # -----------------------------------------------------------------------------------------------------------------------
 
 import argparse
-import importlib
 import json
 
-from actions import ACTIONS, FUNCTIONS
+from actions import ACTIONS, FUNCTIONS, discover, get, set
 
 # -----------------------------------------------------------------------------------------------------------------------
 
@@ -73,15 +72,21 @@ def main():
 
     response = None
     if args.action == "discover":
-        response = importlib.import_module(f"actions.{args.action}").run(
-            verbose=args.verbose
-        )
-    else:
-        response = importlib.import_module(f"actions.{args.action}").run(
+        response = discover.run(verbose=args.verbose)
+    elif args.action == "get":
+        response = get.run(
             burner_address=args.burner,
             serial=args.serial,
             pin_code=args.pin,
             function_name=args.function,
+            path=args.path,
+            verbose=args.verbose,
+        )
+    elif args.action == "set":
+        response = set.run(
+            burner_address=args.burner,
+            serial=args.serial,
+            pin_code=args.pin,
             path=args.path,
             value=args.value,
             verbose=args.verbose,

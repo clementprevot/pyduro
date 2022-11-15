@@ -17,7 +17,8 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
-        "Intended Audience :: Developers" "Topic :: Software Development :: Libraries",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries",
         "Topic :: Home Automation",
         "Natural Language :: English",
         "Natural Language :: French",
@@ -34,10 +35,6 @@ setup(
     package_dir={"": "src"},
     py_modules=[],
     python_requires=">=3.6",
-    url={
-        "Documentation": "https://github.com/clementprevot/pyduro/blob/main/README.md",
-        "Source": "https://github.com/clementprevot/pyduro",
-        "Tracker": "https://github.com/clementprevot/pyduro/issues",
-    },
-    version="1.0.0",
+    url="https://github.com/clementprevot/pyduro",
+    version="1.3.0",
 )

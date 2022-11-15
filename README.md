@@ -117,17 +117,17 @@ pip install pyduro
 Simply import the actions and use them:
 
 ```python
-from pyduro import actions
+from pyduro.actions import discover, get, set
 
-actions.discover.run()
-actions.get.run(
+discover.run()
+get.run(
   burner_address="<burner IP address>",
   serial="<burner serial number>",
   pin_code="<burner pin code>",
   function_name="<settings|range|operating|advanced|consumption|chart|logs|info|versions>",
   path="<path>"
 )
-actions.set.run(
+set.run(
   burner_address="<burner IP address>",
   serial="<burner serial number>",
   pin_code="<burner pin code>",
@@ -161,16 +161,18 @@ You can also use the `parse_payload` method that will return:
 
 ## CLI usage
 
+Clone this repository to use the CLI.
+
 ### Integrated help
 
 ```bash
-python pyduro.py --help
+python src/pyduro.py --help
 ```
 
 ### Discover a burner
 
 ```bash
-python pyduro.py [discover]
+python src/pyduro.py [discover]
 ```
 
 The CLI will exit with 0 if a burner is found, 1 otherwise.
@@ -178,7 +180,7 @@ The CLI will exit with 0 if a burner is found, 1 otherwise.
 ### Get information from a burner
 
 ```bash
-python pyduro.py -b <burner IP address> -s <burner serial number> -p <burner pin code> get <settings|range|operating|advanced|consumption|chart|logs|info|versions> "<path>"
+python src/pyduro.py -b <burner IP address> -s <burner serial number> -p <burner pin code> get <settings|range|operating|advanced|consumption|chart|logs|info|versions> "<path>"
 ```
 
 The result will be output as a JSON object that you can then manipulate with
@@ -225,7 +227,7 @@ error).
 **Examples**
 
 ```bash
-python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get operating
+python src/pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get operating
 
 > {
 >   "NA": "38",
@@ -241,13 +243,13 @@ python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get operating
 ```
 
 ```bash
-python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get operating "boiler_ref"
+python src/pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get operating "boiler_ref"
 
 > "boiler_ref=19.0"
 ```
 
 ```bash
-python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.*"
+python src/pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.*"
 
 > {
 >   [...]
@@ -258,7 +260,7 @@ python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.*"
 ```
 
 ```bash
-python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.start"
+python src/pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.start"
 
 > "start=0"
 ```
@@ -271,7 +273,7 @@ python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.start"
 ### Update a burner's setting
 
 ```bash
-python pyduro.py -b <burner IP address> -s <burner serial number> -p <burner pin code> set settings "<path>" "<value>"
+python src/pyduro.py -b <burner IP address> -s <burner serial number> -p <burner pin code> set settings "<path>" "<value>"
 ```
 
 The CLI will exit with the return code return by the burner (0 = success, >0 =
@@ -280,9 +282,9 @@ error).
 **Examples**
 
 ```bash
-python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 set settings "misc.start" "1"
+python src/pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 set settings "misc.start" "1"
 ```
 
 ```bash
-python pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 set settings "misc.stop" "1"
+python src/pyduro.py -b 192.168.1.250 -s 1234 -p 12345678 set settings "misc.stop" "1"
 ```

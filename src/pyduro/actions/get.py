@@ -2,9 +2,10 @@
 
 # -----------------------------------------------------------------------------------------------------------------------
 import time
+
+from actions import CONSUMPTION_DATA, SETTINGS
 from protocol import (
     FUNCTIONS,
-    PAYLOADS,
     FunctionNotFoundException,
     PayloadToLargeException,
 )
@@ -13,9 +14,7 @@ from protocol.frame import Frame
 # -----------------------------------------------------------------------------------------------------------------------
 
 
-def run(
-    burner_address, serial, pin_code, function_name, path="*", value=None, verbose=False
-):
+def run(burner_address, serial, pin_code, function_name, path="*", verbose=False):
     """
     Get information from the given burner.
 
@@ -29,50 +28,9 @@ def run(
             will be right padded with 0s.
         function (int): The part of the burner information you want to get.
         path (str): The path of the payload to modify on the burner.
-        value (str): Not used here.
         verbose (bool): Indicates if we want the frame to be printed before sending it.
             Default: False
     """
-
-    root = (
-        "settings",
-        "operating_data",
-        "advanced_data",
-        "consumption_data",
-        "event_log",
-        "sw_versions",
-        "info",
-    )
-    settings = (
-        "boiler",
-        "hot_water",
-        "regulation",
-        "weather",
-        "weather2",
-        "oxygen",
-        "cleaning",
-        "hopper",
-        "fan",
-        "auger",
-        "ignition",
-        "pump",
-        "sun",
-        "vacuum",
-        "misc",
-        "alarm",
-        "manual",
-    )
-    consumption_data = (
-        "total_hours",
-        "total_days",
-        "total_months",
-        "total_years",
-        "dhw_hours",
-        "dhw_days",
-        "dhw_months",
-        "dhw_years",
-        "counter",
-    )
 
     try:
         function = None
@@ -81,7 +39,7 @@ def run(
             function = FUNCTIONS.get_settings.value
 
             if path is None or len(path) == 0:
-                print("You must pass one of the following as path: {}".format(settings))
+                print("You must pass one of the following as path: {}".format(SETTINGS))
 
                 return
         if function_name == "range":
@@ -93,10 +51,10 @@ def run(
         elif function_name == "consumption":
             function = FUNCTIONS.get_consumption_data.value
 
-            if path is None or len(path) == 0 or path not in consumption_data:
+            if path is None or len(path) == 0 or path not in CONSUMPTION_DATA:
                 print(
                     "You must pass one of the following as path: {}".format(
-                        consumption_data
+                        CONSUMPTION_DATA
                     )
                 )
 
