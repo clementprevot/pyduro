@@ -161,8 +161,6 @@ You can also use the `parse_payload` method that will return:
 
 ## CLI usage
 
-Clone this repository to use the CLI.
-
 ### Integrated help
 
 ```bash
