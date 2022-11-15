@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 # -----------------------------------------------------------------------------------------------------------------------
-from actions import SETTINGS
-from protocol import (
+from pyduro.actions import SETTINGS
+from pyduro.protocol import (
     FUNCTIONS,
     FunctionNotFoundException,
     PayloadToLargeException,
 )
-from protocol.frame import Frame
+from pyduro.protocol.frame import Frame
 
 # -----------------------------------------------------------------------------------------------------------------------
 

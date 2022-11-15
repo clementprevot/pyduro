@@ -3,13 +3,13 @@
 # -----------------------------------------------------------------------------------------------------------------------
 import time
 
-from actions import CONSUMPTION_DATA, SETTINGS
-from protocol import (
+from pyduro.actions import CONSUMPTION_DATA, SETTINGS
+from pyduro.protocol import (
     FUNCTIONS,
     FunctionNotFoundException,
     PayloadToLargeException,
 )
-from protocol.frame import Frame
+from pyduro.protocol.frame import Frame
 
 # -----------------------------------------------------------------------------------------------------------------------
 

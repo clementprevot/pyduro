@@ -2,14 +2,14 @@
 
 # -----------------------------------------------------------------------------------------------------------------------
 
-from actions import DEFAULT_DISCOVERY_ADDRESS
-from protocol import (
+from pyduro.actions import DEFAULT_DISCOVERY_ADDRESS
+from pyduro.protocol import (
     FUNCTIONS,
     PAYLOADS,
     FunctionNotFoundException,
     PayloadToLargeException,
 )
-from protocol.frame import Frame
+from pyduro.protocol.frame import Frame
 
 # -----------------------------------------------------------------------------------------------------------------------
 
