@@ -5,7 +5,7 @@
 import socket
 from time import time
 
-from protocol import (
+from pyduro.protocol import (
     DEFAULT_APP_ID,
     DEFAULT_LOCAL_ADDRESS,
     DEFAULT_NBE_PORT,
