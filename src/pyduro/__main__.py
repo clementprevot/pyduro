@@ -6,7 +6,7 @@
 import argparse
 import json
 
-from actions import ACTIONS, FUNCTIONS, discover, get, set
+from pyduro.actions import ACTIONS, FUNCTIONS, discover, get, set
 
 # -----------------------------------------------------------------------------------------------------------------------
 
