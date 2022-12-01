@@ -295,7 +295,7 @@ python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 get settings "misc.start"
 ### Update a burner's setting
 
 ```bash
-python -m pyduro -b <burner IP address> -s <burner serial number> -p <burner pin code> set settings "<path>" "<value>"
+python -m pyduro -b <burner IP address> -s <burner serial number> -p <burner pin code> set "<path>" "<value>"
 ```
 
 The CLI will exit with the return code return by the burner (0 = success, >0 =
@@ -304,9 +304,9 @@ error).
 **Examples**
 
 ```bash
-python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 set settings "misc.start" "1"
+python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 set "misc.start" "1"
 ```
 
 ```bash
-python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 set settings "misc.stop" "1"
+python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 set "misc.stop" "1"
 ```
