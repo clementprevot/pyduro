@@ -144,7 +144,6 @@ set.run(
   burner_address="<burner IP address>",
   serial="<burner serial number>",
   pin_code="<burner pin code>",
-  function_name="<settings|range|operating|advanced|consumption|chart|logs|info|versions>",
   path="<path>"
   value="<value>"
 )
