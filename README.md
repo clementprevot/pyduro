@@ -219,6 +219,7 @@ python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 status
 >   "dhw_ref": "0.0",
 >   [...]
 > }
+```
 
 ### Get information from a burner
 
