@@ -132,11 +132,11 @@ def main():
     if response:
         if args.action == "status":
             status = response.parse_payload().split(",")
-            i=0
+            i = 0
             for key in STATUS_PARAMS:
-                STATUS_PARAMS[key]=status[i]
-                i+=1
-            print(str(STATUS_PARAMS))
+                STATUS_PARAMS[key] = status[i]
+                i += 1
+            print(json.dumps(STATUS_PARAMS))
         elif args.action == "get":
             print(json.dumps(response.parse_payload(), sort_keys=True, indent=2))
         else:

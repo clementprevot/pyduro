@@ -200,7 +200,25 @@ The CLI will exit with 0 if a burner is found, 1 otherwise.
 python -m pyduro -b <burner IP address> -s <burner serial number> -p <burner pin code> status
 ```
 
-This will output a list of burner parameters and their values.
+The result will be output as a JSON object that you can then manipulate with
+`jq` for example.
+
+The CLI will exit with the return code return by the burner (0 = success, >0 =
+error).
+
+**Examples**
+
+```bash
+python -m pyduro -b 192.168.1.250 -s 1234 -p 12345678 status
+
+> {
+>   "boiler_temp": "14.9",
+>   "boiler_ref": "20.0",
+>   "content": "-2038",
+>   "dhw_temp": "13.6",
+>   "dhw_ref": "0.0",
+>   [...]
+> }
 
 ### Get information from a burner
 
