@@ -6,7 +6,7 @@
 import argparse
 import json
 
-from pyduro.actions import FUNCTIONS, discover, get, set, raw
+from pyduro.actions import FUNCTIONS, STATUS_PARAMS, discover, get, set, raw
 
 # --------------------------------------------------------------------------------------------------
 
@@ -45,6 +45,8 @@ def main():
     sub_parsers = parser.add_subparsers(title="Action", dest="action")
 
     sub_parsers.add_parser("discover", help="Discover any burner on your network")
+
+    sub_parsers.add_parser("status", help="Get status of the burner")
 
     parser_get = sub_parsers.add_parser("get", help="Get information from a burner")
     parser_get.add_argument(
@@ -90,6 +92,15 @@ def main():
     response = None
     if args.action is None or args.action == "discover":
         response = discover.run(verbose=args.verbose)
+    elif args.action == "status":
+        response = raw.run(
+            burner_address=args.burner,
+            serial=args.serial,
+            pin_code=args.pin,
+            function_id=11,
+            payload="*",
+            verbose=args.verbose,
+        )
     elif args.action == "get":
         response = get.run(
             burner_address=args.burner,
@@ -119,7 +130,14 @@ def main():
         )
 
     if response:
-        if args.action == "get":
+        if args.action == "status":
+            status = response.parse_payload().split(",")
+            i=0
+            for key in STATUS_PARAMS:
+                STATUS_PARAMS[key]=status[i]
+                i+=1
+            print(str(STATUS_PARAMS))
+        elif args.action == "get":
             print(json.dumps(response.parse_payload(), sort_keys=True, indent=2))
         else:
             print(response.parse_payload())
