@@ -194,6 +194,14 @@ python -m pyduro [discover]
 
 The CLI will exit with 0 if a burner is found, 1 otherwise.
 
+### Get the status of a burner
+
+```bash
+python -m pyduro -b <burner IP address> -s <burner serial number> -p <burner pin code> status
+```
+
+This will output a list of burner parameters and their values.
+
 ### Get information from a burner
 
 ```bash
