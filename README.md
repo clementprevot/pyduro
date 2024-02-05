@@ -144,7 +144,7 @@ set.run(
   burner_address="<burner IP address>",
   serial="<burner serial number>",
   pin_code="<burner pin code>",
-  path="<path>"
+  path="<path>",
   value="<value>"
 )
 raw.run(
